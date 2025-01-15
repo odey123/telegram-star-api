@@ -1,24 +1,24 @@
-const mongoose = require ('mongoose')
+const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.schema({
-    telegramId: {
-        type: String,
+const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  stars: [
+    {
+      starId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Star',  // Reference to Star model
         required: true,
-        unique: true,
-    },
-    username: {
-        type: String,
-        required: false
-    },
-    balance: {
+      },
+      quantity: {
         type: Number,
-        default: 0,
+        required: true,
+        default: 0, // Ensure quantity is set by default if not provided
+      },
     },
-    createdAT: {
-        type: Date,
-        default: Date.now,
-    }
+  ],
 });
 
-module.exports = mongoose.model('Star', StarSchema);
-
+module.exports = mongoose.model('User', UserSchema);

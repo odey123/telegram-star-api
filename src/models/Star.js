@@ -19,4 +19,7 @@ const StarSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Star', StarSchema)
+
+const Star = mongoose.models.Star || mongoose.model('Star', StarSchema);
+
+module.exports = Star;

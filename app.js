@@ -6,6 +6,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const dotenv = require('dotenv');
 const CONFIG = require("./src/setup/config")
 const paymentRoutes = require('./src/routes/paymentRoutes')
+const authRoutes = require('./src/routes/authRoutes')
+const starRoutes = require('./src/routes/starsRoutes')
 const connectDB = require('./src/setup/mongo_db')
 const cors = require("cors")
 
@@ -30,6 +32,8 @@ app.use((err, req, res, next) => {
 
 // Use the payment routes
 app.use('/api/payment', paymentRoutes);
+app.use('/api/auth', authRoutes)
+app.use('/api/stars', starRoutes)
 
 connectDB()
 const port = CONFIG.ENV.PORT || 4000

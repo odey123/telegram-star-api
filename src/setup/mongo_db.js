@@ -11,7 +11,7 @@ function setupMongoDB() {
     .connect(MONGODB_URI)
     .then(() => console.log(`Connected to MongoDB :: ${MONGODB_URI}`))
     .catch((err) =>
-      console.log(`Error connecting to MongoDB :: ${MONGODB_URI}`)
+      console.log(`Error connecting to MongoDB :: ${MONGODB_URI}`, err.message)
     );
 }
 

@@ -20,6 +20,7 @@
     "mongo-db": "^1.0.2",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
+    "node-fetch": "^3.3.2",
     "node-telegram-bot-api": "^0.66.0",
     "stripe": "^17.5.0",
     "tonweb": "^0.0.66"
