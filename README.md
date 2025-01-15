@@ -131,7 +131,7 @@ The backend provides the following routes:
 ### Backend
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
+   git clone 
    ```
 2. Install dependencies:
    ```bash
@@ -139,10 +139,10 @@ The backend provides the following routes:
    ```
 3. Create a `.env` file with the following variables:
    ```env
-   PORT=5000
-   MONGO_URI=<your_mongo_connection_string>
-   TON_WALLET_ADDRESS=<your_ton_wallet_address>
-   TON_API_KEY=<your_ton_api_key>
+   PORT=4000
+   MONGO_URI=mongodb+srv://ohotujude:iNFu7JTF0BSaSCFl@cluster0.sfwkq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   TON_WALLET_ADDRESS=UQB_nL5fzbDCNbnvq0D0ZLx4vfG2gLm96YQgvtpv1AHuszfb
+   TON_API_KEY=e19f41be916ee2a9ce1e20d8afa3b32dd8c53d1fbf96818c1b558582a45239b
    ```
 4. Start the backend server:
    ```bash
