@@ -97,6 +97,77 @@ The backend provides the following routes:
 
 ---
 
+## Wallet Functionality
+
+### 4. **Get Wallet Balance**
+This endpoint retrieves the balance of the user's wallet in TON or Stars.
+
+- **Endpoint**: `GET /api/wallet/balance`
+- **Query Parameters**: 
+  - `userId` (required): The unique identifier of the user (from Telegram or your database).
+- **Response**:
+  ```json
+  {
+    "balance": 100,
+    "currency": "TON"
+  }
+
+### 5. **Deposit Funds**
+This endpoint allows users to deposit TON into their wallet. The balance is updated accordingly.
+
+- **Endpoint**: `POST /api/wallet/deposit`
+- **Query Parameters**:
+ -`userId` (required): The unique identifier of the user.
+`amount` (required): The amount of TON to deposit.
+-**Response**:
+```json
+{
+  "balance": 150
+}
+
+### 6. **Withdraw Funds**
+This endpoint allows users to withdraw TON from their wallet, with validation to ensure sufficient funds.
+
+- **Endpoint**: `POST /api/wallet/withdraw`
+- **Query Parameters**:
+- userId (required): The unique identifier of the user.
+`amount` (required): The amount of TON to withdraw.
+Response:
+json
+
+{
+  "balance": 50
+}
+
+### 7. Transaction History
+This endpoint allows users to retrieve their transaction history (deposits and withdrawals).
+
+Endpoint: GET /api/wallet/history
+Query Parameters:
+userId (required): The unique identifier of the user.
+Response:
+json
+
+[
+  {
+    "userId": "123456",
+    "transactionHash": "DEPOSIT1642994167077",
+    "amount": 100,
+    "currency": "TON",
+    "status": "verified",
+    "createdAt": "2025-01-22T10:00:00Z"
+  },
+  {
+    "userId": "123456",
+    "transactionHash": "WITHDRAW1642994200000",
+    "amount": 50,
+    "currency": "TON",
+    "status": "verified",
+    "createdAt": "2025-01-22T11:00:00Z"
+  }
+]
+
+
 ## Database Models
 
 ### 1. **Star Model**
