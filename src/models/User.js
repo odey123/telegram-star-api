@@ -19,6 +19,15 @@ const UserSchema = new mongoose.Schema({
       },
     },
   ],
+  walletBalance: {
+    type: Number,
+    default: 0, // Start with a default balance of 0 TON
+  },
+  currency: {
+    type: String,
+    enum: ['TON', 'Stars'],
+    default: 'TON', // Default to TON
+  },
 });
 
 module.exports = mongoose.model('User', UserSchema);
