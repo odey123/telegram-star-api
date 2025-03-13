@@ -1,7 +1,5 @@
 {
     "url": "https://telegram-star-api.onrender.com",
     "name": "Telegram Stars",
-    "termsOfUseUrl": "https://your-domain.com/terms",
-    "privacyPolicyUrl": "https://your-domain.com/privacy-policy"
+    "manifestVersion": "1.0"
   }
-  
