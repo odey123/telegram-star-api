@@ -79,7 +79,6 @@ app.get("/tonconnect-manifest.json", (req, res) => {
   res.json({
     "url": "https://telegram-star-api.onrender.com",
     "name": "Telegram Stars",
-    "iconUrl": "https://your-domain.com/logo.png",
     "manifestVersion": "1.0"
   });
 });
