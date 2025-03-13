@@ -1,16 +1,10 @@
-const mongoose = require('mongoose');
 const User = require('../models/User');
 const Star = require('../models/Star');
-const PaymentService = require('./paymentService');
 
 class StarService {
     async giftStar(senderId, recipientId, starId, quantity) {
         try {
-            // Use new keyword when creating ObjectId
-            const senderIdObjectId = new mongoose.Types.ObjectId(senderId);
-            const starIdObjectId = new mongoose.Types.ObjectId(starId);
-
-            const sender = await User.findById(senderIdObjectId);
+            const sender = await User.findById(senderId);
             const recipient = await User.findById(recipientId);
 
             if (!sender || !recipient) {
@@ -39,46 +33,33 @@ class StarService {
         }
     }
 
-    async purchaseStars(userId, starId, transactionHash) {
+    async purchaseStars(walletAddress, starId, quantity) {
         try {
-            // Use new keyword for ObjectId conversion
-            const userIdObjectId = new mongoose.Types.ObjectId(userId);
-            const starIdObjectId = new mongoose.Types.ObjectId(starId);
-
-            const paymentService = new PaymentService();
-            const paymentVerification = await paymentService.verifyPayment(transactionHash);
-
-            if (!paymentVerification.success) {
-                return { success: false, message: paymentVerification.message };
-            }
-
-            // Step 2: Fetch the star details
-            const star = await Star.findById(starIdObjectId);
-            if (!star) {
-                return { success: false, message: 'Star not found' };
-            }
-
-            // Step 3: Check if the payment amount matches the star price
-            if (paymentVerification.amount < star.price) {
-                return { success: false, message: 'Insufficient payment for the star' };
-            }
-
-            // Step 4: Update the user's star balance
-            const user = await User.findById(userIdObjectId);
+            const user = await User.findOne({ walletAddress });
             if (!user) {
-                return { success: false, message: 'User not found' };
+                throw new Error('User not found');
             }
 
-            const userStarBalance = user.stars.find(s => s.starId.toString() === starId);
-            if (userStarBalance) {
-                userStarBalance.quantity += 1; // Add one star for each purchase
+            const star = await Star.findById(starId);
+            if (!star) {
+                throw new Error('Star not found');
+            }
+
+            const totalCost = star.price * quantity;
+            if (user.walletBalance < totalCost) {
+                throw new Error('Insufficient balance to purchase stars');
+            }
+
+            user.walletBalance -= totalCost;
+            const userStar = user.stars.find(s => s.starId.toString() === starId);
+            if (userStar) {
+                userStar.quantity += quantity;
             } else {
-                user.stars.push({ starId, quantity: 1 });
+                user.stars.push({ starId, quantity });
             }
-
             await user.save();
 
-            return { success: true, message: 'Star purchased successfully', star };
+            return { success: true, message: 'Star purchased successfully', balance: user.walletBalance };
         } catch (error) {
             throw new Error(error.message);
         }
@@ -86,10 +67,7 @@ class StarService {
 
     async checkStarBalance(userId) {
         try {
-            // Use new keyword for ObjectId conversion
-            const userIdObjectId = new mongoose.Types.ObjectId(userId);
-
-            const user = await User.findById(userIdObjectId).populate('stars.starId', 'name price');
+            const user = await User.findById(userId).populate('stars.starId', 'name price');
             if (!user) {
                 return { success: false, message: 'User not found' };
             }

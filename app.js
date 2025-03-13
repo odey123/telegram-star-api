@@ -25,7 +25,7 @@ app.use(
 );
 
 // Root route for welcome message
-app.get('/', (req, res) => {
+app.get('welcome/', (req, res) => {
   res.status(200).send(`
     <!DOCTYPE html>
     <html lang="en">

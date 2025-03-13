@@ -1,55 +1,55 @@
 const walletService = require('../services/walletService');
 
-// Controller to handle the get wallet balance request
+// Get wallet balance
 const getWalletBalance = async (req, res) => {
   try {
-    const userId = req.query.userId; // Assuming user is authenticated and userId is in the request
-    const balance = await walletService.getWalletBalance(userId);
+    const { walletAddress } = req.body; // Expecting walletAddress in the request body
+    if (!walletAddress) return res.status(400).json({ message: 'Wallet address is required' });
+
+    const balance = await walletService.getWalletBalance(walletAddress);
     return res.status(200).json(balance);
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-// Controller to handle deposit funds request
+// Deposit funds
 const depositFunds = async (req, res) => {
   try {
-    const userId = req.query.userId; // Assuming user is authenticated and userId is in the request
-    const depositAmount = parseFloat(req.query.amount); // Amount to deposit
-
-    if (!depositAmount || depositAmount <= 0) {
-      return res.status(400).json({ message: 'Invalid deposit amount' });
+    const { walletAddress, amount, transactionHash } = req.body;
+    if (!walletAddress || !amount || !transactionHash) {
+      return res.status(400).json({ message: 'Wallet address, amount, and transaction hash are required' });
     }
 
-    const updatedBalance = await walletService.depositFunds(userId, depositAmount);
+    const updatedBalance = await walletService.depositFunds(walletAddress, amount, transactionHash);
     return res.status(200).json({ message: 'Deposit successful', balance: updatedBalance });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-// Controller to handle withdraw funds request
+// Withdraw funds
 const withdrawFunds = async (req, res) => {
   try {
-    const userId = req.query.userId; // Assuming user is authenticated and userId is in the request
-    const withdrawAmount = parseFloat(req.query.amount); // Amount to withdraw
-
-    if (!withdrawAmount || withdrawAmount <= 0) {
-      return res.status(400).json({ message: 'Invalid withdrawal amount' });
+    const { walletAddress, amount, transactionHash } = req.body;
+    if (!walletAddress || !amount || !transactionHash) {
+      return res.status(400).json({ message: 'Wallet address, amount, and transaction hash are required' });
     }
 
-    const updatedBalance = await walletService.withdrawFunds(userId, withdrawAmount);
+    const updatedBalance = await walletService.withdrawFunds(walletAddress, amount, transactionHash);
     return res.status(200).json({ message: 'Withdrawal successful', balance: updatedBalance });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
 
-// Controller to get the wallet transaction history
+// Get transaction history
 const getTransactionHistory = async (req, res) => {
   try {
-    const userId = req.query.userId; // Assuming user is authenticated and userId is in the request
-    const transactions = await walletService.getTransactionHistory(userId);
+    const { walletAddress } = req.body;
+    if (!walletAddress) return res.status(400).json({ message: 'Wallet address is required' });
+
+    const transactions = await walletService.getTransactionHistory(walletAddress);
     return res.status(200).json(transactions);
   } catch (error) {
     return res.status(400).json({ message: error.message });
