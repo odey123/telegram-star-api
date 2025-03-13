@@ -2,7 +2,7 @@ const nacl = require("tweetnacl");
 
 const getConnectionLink = async (req, res) => {
     try {
-        const manifestUrl = "https://https://telegram-star-api.onrender.com/tonconnect-manifest.json";
+        const manifestUrl = "https://telegram-star-api.onrender.com/tonconnect-manifest.json";
         const link = `https://tonkeeper.com/ton-connect?manifest=${encodeURIComponent(manifestUrl)}`;
         
         res.json({ link });
