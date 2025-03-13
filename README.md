@@ -14,7 +14,7 @@ The Telegram Stars Mini App allows users to interact with stars that can be purc
 The backend provides the following routes:
 
 ### 1. **Gift Star**
-- **Endpoint**: `POST /api/stars/gift`
+- **Endpoint**: `POST /api/stars/giftStar`
 - **Request Body**:
   ```json
   {
