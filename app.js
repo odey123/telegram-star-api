@@ -73,6 +73,7 @@ app.get('welcome/', (req, res) => {
 });
 
 //app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static('public'));
 
 // Add route for tonconnect-manifest.json
 app.get("/tonconnect-manifest.json", (req, res) => {
