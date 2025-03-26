@@ -20,7 +20,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan("tiny"));
-app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "PATCH", "DELETE"] }));
+app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"] }));
 
 // Swagger options
 const swaggerOptions = {
