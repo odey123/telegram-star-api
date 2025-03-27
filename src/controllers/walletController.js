@@ -20,15 +20,24 @@ const getWalletBalance = async (req, res) => {
 const depositFunds = async (req, res) => {
   try {
     const { walletAddress, amount, transactionHash } = req.body;
+
     if (!walletAddress || !amount || !transactionHash) {
-      return res.status(400).json({ success: false, message: 'Wallet address, amount, and transaction hash are required' });
+      return res.status(400).json({ success: false, message: "Wallet address, amount, and transaction hash are required" });
     }
 
     const updatedBalance = await walletService.depositFunds(walletAddress, amount, transactionHash);
-    return res.status(200).json({ success: true, message: 'Deposit successful', balance: updatedBalance });
+    
+    console.log("Updated Balance Response:", updatedBalance); // Debugging
+
+    if (!updatedBalance || updatedBalance.success === false) {
+      return res.status(400).json({ success: false, message: "Deposit failed", balance: updatedBalance });
+    }
+
+    return res.status(200).json({ success: true, message: "Deposit successful", balance: updatedBalance });
+
   } catch (error) {
-    console.error('Error processing deposit:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal Server Error', details: error.message });
+    console.error("Error processing deposit:", error.message);
+    return res.status(500).json({ success: false, message: "Internal Server Error", details: error.message });
   }
 };
 
