@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Payment = require('../models/payment');
+const Payment = require('../models/Order');
 
 const walletService = {
     // Get wallet balance
@@ -16,37 +16,6 @@ const walletService = {
         }
     },
 
-    // Deposit funds (TON transfer to wallet)
-    depositFunds: async (walletAddress, amount, transactionHash) => {
-        try {
-            if (amount <= 0) {
-                throw new Error('Deposit amount must be greater than zero');
-            }
-
-            const user = await User.findOneAndUpdate(
-                { walletAddress },
-                { $inc: { walletBalance: amount } },
-                { new: true }
-            );
-
-            if (!user) {
-                throw new Error('User not found');
-            }
-
-            await Payment.create({
-                walletAddress,
-                transactionHash,
-                amount,
-                status: 'verified',
-                currency: 'TON',
-            });
-
-            return { success: true, balance: user.walletBalance, message: 'Deposit successful' };
-        } catch (error) {
-            console.error('Deposit Funds Error:', error);
-            return { success: false, message: 'Deposit failed' };
-        }
-    },
 
     // Withdraw funds (TON transfer out)
     withdrawFunds: async (walletAddress, amount, transactionHash) => {

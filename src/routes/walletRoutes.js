@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const walletController = require('../controllers/walletController');
 
+// Get Wallet Balance
 /**
  * @swagger
- * /api/wallet/balance:
+ * /api/wallet/balance?walletAddress=YOUR_WALLET_ADDRESS:
  *   get:
  *     summary: Get wallet balance
  *     description: Retrieve the balance of a user's wallet.
@@ -17,18 +18,10 @@ const walletController = require('../controllers/walletController');
  *     responses:
  *       200:
  *         description: Wallet balance retrieved successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 balance:
- *                   type: number
- *       400:
- *         description: Wallet address is required.
  */
-router.get('/balance', walletController.getWalletBalance);
+router.get('/balance', (req, res) => walletController.getWalletBalance(req, res));
 
+// Deposit Funds
 /**
  * @swagger
  * /api/wallet/deposit:
@@ -51,18 +44,10 @@ router.get('/balance', walletController.getWalletBalance);
  *     responses:
  *       200:
  *         description: Deposit successful.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *       400:
- *         description: Missing required fields.
  */
-router.post('/deposit', walletController.depositFunds);
+router.post('/deposit', (req, res) => walletController.depositFunds(req, res));
 
+// Withdraw Funds
 /**
  * @swagger
  * /api/wallet/withdraw:
@@ -85,21 +70,13 @@ router.post('/deposit', walletController.depositFunds);
  *     responses:
  *       200:
  *         description: Withdrawal successful.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *       400:
- *         description: Missing required fields.
  */
-router.post('/withdraw', walletController.withdrawFunds);
+router.post('/withdraw', (req, res) => walletController.withdrawFunds(req, res));
 
+// Get Transaction History
 /**
  * @swagger
- * /api/wallet/history:
+ * /api/wallet/history?walletAddress=YOUR_WALLET_ADDRESS:
  *   get:
  *     summary: Get wallet transaction history
  *     description: Retrieve a user's transaction history.
@@ -112,23 +89,20 @@ router.post('/withdraw', walletController.withdrawFunds);
  *     responses:
  *       200:
  *         description: Transaction history retrieved successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 transactions:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       transactionHash:
- *                         type: string
- *                       amount:
- *                         type: number
- *       400:
- *         description: Wallet address is required.
  */
-router.get('/history', walletController.getTransactionHistory);
+router.get('/history', (req, res) => walletController.getTransactionHistory(req, res));
+
+// Get TON Price from Binance
+/**
+ * @swagger
+ * /api/wallet/price:
+ *   get:
+ *     summary: Get TON price from Binance
+ *     description: Fetch the current TON/USDT price using Binance public API.
+ *     responses:
+ *       200:
+ *         description: Current TON/USDT price retrieved successfully.
+ */
+router.get('/price', (req, res) => walletController.getTonPrice(req, res));
 
 module.exports = router;

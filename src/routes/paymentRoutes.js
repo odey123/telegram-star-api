@@ -8,6 +8,7 @@ const router = express.Router();
  *   get:
  *     summary: Get the wallet address
  *     description: Retrieves the static wallet address for payments.
+ *     Full URL: https://telegram-star-api.onrender.com/api/payment/address
  *     responses:
  *       200:
  *         description: Successfully retrieved wallet address
@@ -29,6 +30,7 @@ router.get('/address', PaymentController.getWalletAddress);
  *   post:
  *     summary: Verify a payment
  *     description: Verifies a payment transaction on the TON blockchain.
+ *     Full URL: https://telegram-star-api.onrender.com/api/payment/verify
  *     requestBody:
  *       required: true
  *       content:
@@ -42,6 +44,7 @@ router.get('/address', PaymentController.getWalletAddress);
  *     responses:
  *       200:
  *         description: Payment verified successfully
+ *         Full URL: https://telegram-star-api.onrender.com/api/payment/verify
  *         content:
  *           application/json:
  *             schema:

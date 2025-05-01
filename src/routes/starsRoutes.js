@@ -1,22 +1,77 @@
 const express = require('express');
 const router = express.Router();
-const walletController = require('../controllers/walletController');
+const starController = require('../controllers/starsController');
 
 /**
  * @swagger
- * /api/wallet/balance:
+ * /api/stars/gift:
+ *   post:
+ *     summary: Gift stars to another user
+ *     description: Send stars as a gift to another user.  
+ *     Full URL: https://telegram-star-api.onrender.com/api/stars/gift
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fromUserId:
+ *                 type: string
+ *               toUserId:
+ *                 type: string
+ *               amount:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Star gifted successfully.
+ *       400:
+ *         description: Invalid input or insufficient stars.
+ */
+router.post('/gift', starController.giftStar);
+
+/**
+ * @swagger
+ * /api/stars/purchase:
+ *   post:
+ *     summary: Purchase stars
+ *     description: Purchase a specific number of stars using wallet funds.  
+ *     Full URL: https://telegram-star-api.onrender.com/api/stars/purchase
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               amount:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Star purchase successful.
+ *       400:
+ *         description: Insufficient balance or invalid data.
+ */
+router.post('/purchase', starController.purchaseStar);
+
+/**
+ * @swagger
+ * /api/stars/checkbalance:
  *   get:
- *     summary: Get wallet balance
- *     description: Retrieve the balance of a user's wallet.
+ *     summary: Check star balance
+ *     description: Retrieve the star balance of a user.  
+ *     Full URL: https://telegram-star-api.onrender.com/api/stars/checkbalance
  *     parameters:
  *       - in: query
- *         name: walletAddress
+ *         name: userId
  *         required: true
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Wallet balance retrieved successfully.
+ *         description: Star balance retrieved successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -25,110 +80,8 @@ const walletController = require('../controllers/walletController');
  *                 balance:
  *                   type: number
  *       400:
- *         description: Wallet address is required.
+ *         description: User ID is required.
  */
-router.get('/balance', walletController.getWalletBalance);
-
-/**
- * @swagger
- * /api/wallet/deposit:
- *   post:
- *     summary: Deposit funds into wallet
- *     description: Deposit TON into a user's wallet.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               walletAddress:
- *                 type: string
- *               amount:
- *                 type: number
- *               transactionHash:
- *                 type: string
- *     responses:
- *       200:
- *         description: Deposit successful.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *       400:
- *         description: Missing required fields.
- */
-router.post('/deposit', walletController.depositFunds);
-
-/**
- * @swagger
- * /api/wallet/withdraw:
- *   post:
- *     summary: Withdraw funds from wallet
- *     description: Withdraw TON from a user's wallet.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               walletAddress:
- *                 type: string
- *               amount:
- *                 type: number
- *               transactionHash:
- *                 type: string
- *     responses:
- *       200:
- *         description: Withdrawal successful.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *       400:
- *         description: Missing required fields.
- */
-router.post('/withdraw', walletController.withdrawFunds);
-
-/**
- * @swagger
- * /api/wallet/history:
- *   get:
- *     summary: Get wallet transaction history
- *     description: Retrieve a user's transaction history.
- *     parameters:
- *       - in: query
- *         name: walletAddress
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Transaction history retrieved successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 transactions:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       transactionHash:
- *                         type: string
- *                       amount:
- *                         type: number
- *       400:
- *         description: Wallet address is required.
- */
-router.get('/history', walletController.getTransactionHistory);
+router.get('/checkbalance', starController.checkStarBalance);
 
 module.exports = router;

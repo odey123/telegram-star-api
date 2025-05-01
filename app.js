@@ -7,6 +7,7 @@ const CONFIG = require("./src/setup/config");
 const paymentRoutes = require('./src/routes/paymentRoutes');
 const starRoutes = require('./src/routes/starsRoutes');
 const walletRoutes = require('./src/routes/walletRoutes');
+const orderRoutes = require('./src/routes/orderRoutes');
 const connectDB = require('./src/setup/mongo_db');
 
 // Swagger setup
@@ -56,6 +57,8 @@ app.use((err, req, res, next) => {
 app.use('/api/payment', paymentRoutes);
 app.use('/api/stars', starRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/orders', orderRoutes);
+
 
 connectDB();
 const port = CONFIG.ENV.PORT || 4000;

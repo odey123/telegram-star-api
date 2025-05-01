@@ -1,81 +1,106 @@
 const walletService = require('../services/walletService');
+const axios = require('axios');
 
-// Get wallet balance
-const getWalletBalance = async (req, res) => {
-  try {
-    const { walletAddress } = req.params; // Use params instead of body
-    if (!walletAddress) {
-      return res.status(400).json({ success: false, message: 'Wallet address is required' });
+class WalletController {
+  // Get wallet balance (using query params)
+  async getWalletBalance(req, res) {
+    try {
+      const { walletAddress } = req.query;
+      if (!walletAddress) {
+        return res.status(400).json({
+          success: false,
+          message: 'Wallet address is required',
+        });
+      }
+
+      const balance = await walletService.getWalletBalance(walletAddress);
+      return res.status(200).json({ success: true, balance });
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error.message);
+      return res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        details: error.message,
+      });
     }
-
-    const balance = await walletService.getWalletBalance(walletAddress);
-    return res.status(200).json({ success: true, balance });
-  } catch (error) {
-    console.error('Error fetching wallet balance:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal Server Error', details: error.message });
   }
-};
 
-// Deposit funds
-const depositFunds = async (req, res) => {
-  try {
-    const { walletAddress, amount, transactionHash } = req.body;
+  // Withdraw funds
+  async withdrawFunds(req, res) {
+    try {
+      const { walletAddress, amount, transactionHash } = req.body;
+      if (!walletAddress || !amount || !transactionHash) {
+        return res.status(400).json({
+          success: false,
+          message: 'Wallet address, amount, and transaction hash are required',
+        });
+      }
 
-    if (!walletAddress || !amount || !transactionHash) {
-      return res.status(400).json({ success: false, message: "Wallet address, amount, and transaction hash are required" });
+      const updatedBalance = await walletService.withdrawFunds(
+        walletAddress,
+        amount,
+        transactionHash
+      );
+      return res.status(200).json({
+        success: true,
+        message: 'Withdrawal successful',
+        balance: updatedBalance,
+      });
+    } catch (error) {
+      console.error('Error processing withdrawal:', error.message);
+      return res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        details: error.message,
+      });
     }
-
-    const updatedBalance = await walletService.depositFunds(walletAddress, amount, transactionHash);
-    
-    console.log("Updated Balance Response:", updatedBalance); // Debugging
-
-    if (!updatedBalance || updatedBalance.success === false) {
-      return res.status(400).json({ success: false, message: "Deposit failed", balance: updatedBalance });
-    }
-
-    return res.status(200).json({ success: true, message: "Deposit successful", balance: updatedBalance });
-
-  } catch (error) {
-    console.error("Error processing deposit:", error.message);
-    return res.status(500).json({ success: false, message: "Internal Server Error", details: error.message });
   }
-};
 
-// Withdraw funds
-const withdrawFunds = async (req, res) => {
-  try {
-    const { walletAddress, amount, transactionHash } = req.body;
-    if (!walletAddress || !amount || !transactionHash) {
-      return res.status(400).json({ success: false, message: 'Wallet address, amount, and transaction hash are required' });
+  // Get transaction history
+  async getTransactionHistory(req, res) {
+    try {
+      const { walletAddress } = req.query;
+      if (!walletAddress) {
+        return res.status(400).json({
+          success: false,
+          message: 'Wallet address is required',
+        });
+      }
+
+      const transactions = await walletService.getTransactionHistory(walletAddress);
+      return res.status(200).json({ success: true, transactions });
+    } catch (error) {
+      console.error('Error fetching transaction history:', error.message);
+      return res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        details: error.message,
+      });
     }
-
-    const updatedBalance = await walletService.withdrawFunds(walletAddress, amount, transactionHash);
-    return res.status(200).json({ success: true, message: 'Withdrawal successful', balance: updatedBalance });
-  } catch (error) {
-    console.error('Error processing withdrawal:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal Server Error', details: error.message });
   }
-};
 
-// Get transaction history
-const getTransactionHistory = async (req, res) => {
-  try {
-    const { walletAddress } = req.params; // Use params instead of body
-    if (!walletAddress) {
-      return res.status(400).json({ success: false, message: 'Wallet address is required' });
+  // ✅ Get TON price from Binance
+  async getTonPrice(req, res) {
+    try {
+      const response = await axios.get('https://api.binance.com/api/v3/ticker/price', {
+        params: { symbol: 'TONUSDT' }
+      });
+
+      const price = parseFloat(response.data.price);
+      return res.status(200).json({
+        success: true,
+        symbol: 'TON/USDT',
+        price,
+      });
+    } catch (error) {
+      console.error('Error fetching TON price:', error.message);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch TON price',
+        details: error.message,
+      });
     }
-
-    const transactions = await walletService.getTransactionHistory(walletAddress);
-    return res.status(200).json({ success: true, transactions });
-  } catch (error) {
-    console.error('Error fetching transaction history:', error.message);
-    return res.status(500).json({ success: false, message: 'Internal Server Error', details: error.message });
   }
-};
+}
 
-module.exports = {
-  getWalletBalance,
-  depositFunds,
-  withdrawFunds,
-  getTransactionHistory,
-};
+module.exports = new WalletController(); // Return instance, not class
