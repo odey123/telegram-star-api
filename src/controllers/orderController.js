@@ -72,5 +72,4 @@ class OrderController {
   }
 }
 
-// Export the class directly (not an instance)
 module.exports = OrderController;

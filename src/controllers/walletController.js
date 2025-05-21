@@ -79,7 +79,7 @@ class WalletController {
     }
   }
 
-  // ✅ Get TON price from Binance
+  // Get TON price from Binance
   async getTonPrice(req, res) {
     try {
       const response = await axios.get('https://api.binance.com/api/v3/ticker/price', {
@@ -99,6 +99,30 @@ class WalletController {
         message: 'Failed to fetch TON price',
         details: error.message,
       });
+    }
+  }
+
+  async connectWallet(req, res) {
+    try  {
+       const { walletAddress } = req.body;
+
+       if (!walletAddress) {
+          return res.status(400).json({ success: false, message: 'Wallet address is required' });
+       }
+      
+       user.tonwallet = walletAddress;
+       await user.save(); 
+
+       return res.status(200).json({
+        sucess: true,
+        message: 'Wallet connected successfully',
+        data: {
+          walletAddress: user.tonwallet,
+        }
+       })
+    } catch (error) {
+          res.status(500).json({ error: 'Internal Server Error' });
+          console.error('Error connecting wallet:', error.message);
     }
   }
 }

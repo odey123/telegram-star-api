@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@tonconnect/sdk": "^3.0.7",
+    "axios": "^1.9.0",
     "bcryptjs": "^2.4.3",
     "binance": "^2.15.20",
     "body-parser": "^1.20.3",

@@ -1,5 +1,6 @@
 const StarService = require('../services/starsService');
 
+
 class StarController {
   async giftStar(req, res) {
     try {

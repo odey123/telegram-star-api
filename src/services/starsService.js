@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Star = require('../models/Star');
 
+
 class StarService {
     async giftStar(senderId, recipientId, starId, quantity) {
         try {
@@ -91,6 +92,8 @@ class StarService {
             throw new Error(`Check Star Balance Error: ${error.message}`);
         }
     }
+
+    aync 
 }
 
 module.exports = new StarService();

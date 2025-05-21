@@ -21,31 +21,6 @@ const walletController = require('../controllers/walletController');
  */
 router.get('/balance', (req, res) => walletController.getWalletBalance(req, res));
 
-// Deposit Funds
-/**
- * @swagger
- * /api/wallet/deposit:
- *   post:
- *     summary: Deposit funds into wallet
- *     description: Deposit TON into a user's wallet.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               walletAddress:
- *                 type: string
- *               amount:
- *                 type: number
- *               transactionHash:
- *                 type: string
- *     responses:
- *       200:
- *         description: Deposit successful.
- */
-router.post('/deposit', (req, res) => walletController.depositFunds(req, res));
 
 // Withdraw Funds
 /**
@@ -103,6 +78,42 @@ router.get('/history', (req, res) => walletController.getTransactionHistory(req,
  *       200:
  *         description: Current TON/USDT price retrieved successfully.
  */
+
+// Get TON Price from Binance
+/**
+ * @swagger
+ * /api/wallet/price:
+ *   get:
+ *     summary: Get TON price from Binance
+ *     description: Fetch the current TON/USDT price using Binance public API.
+ *     responses:
+ *       200:
+ *         description: Current TON/USDT price retrieved successfully.
+ */
 router.get('/price', (req, res) => walletController.getTonPrice(req, res));
+
+// Connect TON Wallet via TON Connect
+/**
+ * @swagger
+ * /api/wallet/connect:
+ *   post:
+ *     summary: Initiate TON wallet connection
+ *     description: Starts the wallet connection process using TON Connect.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               walletAddress:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Wallet connected successfully.
+ *       400:
+ *         description: Invalid or missing wallet address.
+ */
+router.post('/connect', (req, res) => walletController.connectWallet(req, res));
 
 module.exports = router;
