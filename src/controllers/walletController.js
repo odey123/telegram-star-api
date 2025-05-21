@@ -1,5 +1,6 @@
 const walletService = require('../services/walletService');
 const axios = require('axios');
+const tonService = require('../services/tonService');
 
 class WalletController {
   // Get wallet balance (using query params)
@@ -125,6 +126,28 @@ class WalletController {
           console.error('Error connecting wallet:', error.message);
     }
   }
+
+
+async getTransactionVolume(req, res) {
+  try {
+    const { walletAddress } = req.query;
+    if (!walletAddress) {
+      return res.status(400).json({ success: false, message: 'Wallet address is required' });
+    }
+
+    const volume = await tonService.getTransactionVolume(walletAddress);
+    return res.status(200).json({
+      success: true,
+      walletAddress,
+      volume,
+    });
+  } catch (error) {
+    console.error('Error in getTransactionVolume:', error.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch transaction volume', details: error.message });
+  }
+}
+
+
 }
 
 module.exports = new WalletController(); // Return instance, not class

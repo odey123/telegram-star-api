@@ -116,4 +116,23 @@ router.get('/price', (req, res) => walletController.getTonPrice(req, res));
  */
 router.post('/connect', (req, res) => walletController.connectWallet(req, res));
 
+// Get transaction volume
+/**
+ * @swagger
+ * /api/wallet/volume:
+ *   get:
+ *     summary: Get transaction volume
+ *     description: Retrieve the total transaction volume for a specific wallet address.
+ *     parameters:
+ *       - in: query
+ *         name: walletAddress
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Transaction volume retrieved successfully.
+ */
+router.get('/volume', walletController.getTransactionVolume);
+
 module.exports = router;
